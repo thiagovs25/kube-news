@@ -5,8 +5,8 @@ pipeline{
 
         stage ('Build Docker Image') {
             steps {
-                script{
-                    app = docker.build("thiagovs25/kube-news:${env.BUILD_ID}",  '-f  ./src/Dockerfile  ./src')
+                script {
+                    dockerapp = docker.build("thiagovs25/kube-news:${env.BUILD_ID}",  '-f  ./src/Dockerfile  ./src')
                 }
             }
         }
@@ -14,9 +14,9 @@ pipeline{
         stage ('Push Docker Image') {
             steps {
                 script{
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         dockerapp.push("${env.BUILD_ID}")
-                        dockerapp.push('latest')
+                        dockerapp.push("latest")
                     }
                 }
             }
