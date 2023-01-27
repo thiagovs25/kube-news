@@ -6,9 +6,20 @@ pipeline{
         stage ('Build Docker Image') {
             steps {
                 script{
-                    dockerapp = docker.build("thiagos25/kube-news:${env.BUILD_ID}",  '-f ./src/Dockerfile  ./src')
+                    dockerapp = docker.build("thiagos25/kube-news:${env.BUILD_ID}",  '-f  ./src/Dockerfile  ./src')
                 }
             }
+        }
+
+        stage ('Push Docker Image') {
+            steps {
+                script{
+                    docker.withRegistry('https://regitry.hub.docker.com', 'dockerhub')
+                        dockerapp.push('latest')
+                        dockerapp.push("${env.BUILD_ID}")
+                }
+            }
+
         }
 
     }
